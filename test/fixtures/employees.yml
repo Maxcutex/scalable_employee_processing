@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employer: one
+  name: MyString
+  external_ref: MyString
+
+two:
+  employer: two
+  name: MyString
+  external_ref: MyString
