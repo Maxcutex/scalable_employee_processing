@@ -16,17 +16,24 @@ class CsvImportWorker
       hash[mapping.key] = mapping.value
     end
 
-    ActiveRecord::Base.transaction do
-      rows.each do |row|
-        employee = find_employee(employer, row[layout['employee_id']])
-        earning_date = parse_date(row[layout['date']], '%m/%d/%Y')
-        amount = parse_amount(row[layout['amount']])
+    successful_count = 0
+    failed_count = 0
 
-        create_earning(employee, earning_date, amount)
-      rescue StandardError => e
-        Rails.logger.error("CSV Import Worker Error: #{e.message} for row #{row}")
-      end
+    rows.each do |row|
+      employee = find_employee(employer, row[layout['employee_id']])
+      earning_date = parse_date(row[layout['date']], '%m/%d/%Y')
+      amount = parse_amount(row[layout['amount']])
+
+      create_earning(employee, earning_date, amount)
+      successful_count += 1
+    rescue StandardError => e
+      Rails.logger.error("CSV Import Worker Error: #{e.message} for row #{row}")
+      failed_count += 1
     end
+
+    # Print out the success and failure counts
+    puts "Batch Processing Results: #{successful_count} successful, #{failed_count} failed."
+
   end
 
   private
