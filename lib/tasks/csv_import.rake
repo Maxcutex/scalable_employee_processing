@@ -6,10 +6,10 @@ namespace :csv_import do
     task import: :environment do
       employer_id = ENV['EMPLOYER_ID']
       csv_file_path = ENV['CSV_FILE_PATH']
-  
+
       employer = Employer.find(employer_id)
       csv_data = File.read(csv_file_path)
-  
+
       CsvImportService.new(employer, csv_data).import
       puts "Earnings import initiated for employer #{employer.name}."
     rescue StandardError => e
