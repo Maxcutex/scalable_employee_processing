@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HeaderMapping < ApplicationRecord
   belongs_to :employer
 

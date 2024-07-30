@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_16_165701) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_30_103203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "csv_processing_configurations", force: :cascade do |t|
+    t.bigint "employer_id", null: false
+    t.string "date_format", default: "%m/%d/%Y"
+    t.string "amount_format", default: "dollars"
+    t.string "currency", default: "USD"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "start_date"
+    t.string "cron_schedule"
+    t.index ["employer_id"], name: "index_csv_processing_configurations_on_employer_id"
+  end
 
   create_table "earnings", force: :cascade do |t|
     t.bigint "employee_id", null: false
@@ -47,7 +59,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_16_165701) do
     t.index ["employer_id"], name: "index_header_mappings_on_employer_id"
   end
 
+  create_table "processed_files", force: :cascade do |t|
+    t.bigint "employer_id", null: false
+    t.string "file_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employer_id"], name: "index_processed_files_on_employer_id"
+  end
+
+  add_foreign_key "csv_processing_configurations", "employers"
   add_foreign_key "earnings", "employees"
   add_foreign_key "employees", "employers"
   add_foreign_key "header_mappings", "employers"
+  add_foreign_key "processed_files", "employers"
 end
