@@ -1,0 +1,6 @@
+select * from employers e 
+left join employee emp on e.id = emp.employer_id
+left join earnings en on emp.employee_id = en.employee_id
+
+where e.id = 1 and en.earning_date >= ''
+and en.earning_date <= ''
