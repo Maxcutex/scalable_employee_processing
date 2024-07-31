@@ -22,6 +22,7 @@ class CsvProcessingService
     process_in_batches
   rescue CSV::MalformedCSVError => e
     handle_error("Malformed CSV data: #{e.message}")
+    raise StandardError, "Malformed CSV data: #{e.message}"
   rescue StandardError => e
     handle_error("CSV processing failed: #{e.message}")
   end

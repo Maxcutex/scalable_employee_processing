@@ -28,6 +28,10 @@ RSpec.describe ScheduleService do
 
   describe '.schedule_employers' do
     context 'when no existing schedule exists' do
+      before do
+        allow(Sidekiq::Cron::Job).to receive(:all).and_return([])
+      end
+  
       it 'creates a new schedule' do
         expect(Sidekiq::Cron::Job).to receive(:create).with(
           name: "CsvProcessingJob for Employer #{employer.name}",
@@ -36,7 +40,7 @@ RSpec.describe ScheduleService do
           args: [employer.id],
           description: "Processes CSV for employer #{employer.name}"
         )
-
+  
         ScheduleService.schedule_employers
       end
     end
@@ -69,7 +73,7 @@ RSpec.describe ScheduleService do
     end
 
     context 'when the configuration is blank or cron schedule is missing' do
-      let(:config) { nil }
+      let!(:config) {nil}
 
       it 'does not create or update any schedules' do
         expect(Sidekiq::Cron::Job).not_to receive(:create)

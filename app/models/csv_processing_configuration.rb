@@ -4,9 +4,6 @@
 class CsvProcessingConfiguration < ApplicationRecord
   belongs_to :employer
 
-  validates :date_format, presence: true
-  validates :amount_format, presence: true
-  validates :currency, presence: true
-  validates :cron_schedule, presence: true
-  validates :start_date, presence: true
+  validates :date_format, :amount_format, :currency, :start_date, :cron_schedule, presence: true
+
 end

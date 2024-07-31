@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+
 
 # ScheduleService manages the scheduling of CSV processing jobs for employers.
 # It ensures that each employer's CSV processing is scheduled according to their cron schedule and start date.
