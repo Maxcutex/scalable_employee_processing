@@ -3,16 +3,38 @@
 require 'rails_helper'
 
 RSpec.describe ProcessedFile, type: :model do
-  it { should validate_presence_of(:file_name) }
-  it { should validate_presence_of(:processed_at) }
-  
-  it { should belong_to(:employer) }
+  context 'validations' do
+    it 'is valid with an employer and file_key' do
+      employer = Employer.create(name: 'Test Employer')
+      processed_file = ProcessedFile.create(
+        employer: employer,
+        file_key: 'unique_file_key_123'
+      )
+      expect(processed_file).to be_valid
+    end
 
-  # Example for custom methods if any
-  describe '#some_custom_method' do
-    it 'does something' do
-      processed_file = create(:processed_file)
-      expect(processed_file.some_custom_method).to eq(expected_result)
+    it 'is not valid without an employer' do
+      processed_file = ProcessedFile.create(file_key: 'unique_file_key_123')
+      expect(processed_file).to_not be_valid
+      expect(processed_file.errors[:employer]).to include("must exist")
+    end
+
+    it 'is not valid without a file_key' do
+      employer = Employer.create(name: 'Test Employer')
+      processed_file = ProcessedFile.create(employer: employer)
+      expect(processed_file).to_not be_valid
+      expect(processed_file.errors[:file_key]).to include("can't be blank")
+    end
+  end
+
+  context 'associations' do
+    it 'belongs to an employer' do
+      employer = Employer.create(name: 'Test Employer')
+      processed_file = ProcessedFile.create(
+        employer: employer,
+        file_key: 'unique_file_key_123'
+      )
+      expect(processed_file.employer).to eq(employer)
     end
   end
 end
